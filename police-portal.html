@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Police Portal – CyberShield</title>
+  <meta name="description" content="Law enforcement portal for reviewing cybercrime cases, examining digital evidence, and managing case status." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">
+        <span class="logo-icon">⬡</span>
+        <span>CyberShield</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="victim-portal.html">Citizen Portal</a></li>
+        <li><a href="admin-portal.html">Admin Portal</a></li>
+      </ul>
+      <div class="nav-actions">
+        <span class="status-badge badge-purple" style="font-size:0.75rem;">Law Enforcement</span>
+      </div>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="index.html">Home</a>
+      <a href="victim-portal.html">Citizen Portal</a>
+      <a href="admin-portal.html">Admin Portal</a>
+    </div>
+  </nav>
+
+  <canvas id="gridCanvas"></canvas>
+
+  <!-- AUTH VIEW -->
+  <div id="auth-view">
+    <div class="auth-wrap">
+      <div class="auth-card">
+        <div class="auth-logo" style="color:#818cf8;">
+          <span>⬡</span> CyberShield · Police Portal
+        </div>
+        <h2>Officer Login</h2>
+        <p class="sub">Restricted Access — Law Enforcement Personnel Only</p>
+        <form id="police-login-form" style="margin-top:24px;">
+          <div class="form-group">
+            <label for="badge-id">Badge ID / Email</label>
+            <input type="text" id="badge-id" placeholder="officer@police.gov" required />
+          </div>
+          <div class="form-group">
+            <label for="police-pass">Password</label>
+            <input type="password" id="police-pass" placeholder="••••••••" required />
+          </div>
+          <button type="button" class="btn btn-primary form-submit" style="background:#818cf8;box-shadow:0 0 20px rgba(129,140,248,0.3);" id="police-login-btn">
+            Login to Police Portal →
+          </button>
+        </form>
+        <div style="margin-top:20px;padding:14px;background:rgba(129,140,248,0.08);border:1px solid rgba(129,140,248,0.2);border-radius:8px;font-size:0.8rem;color:var(--text-muted);">
+          Access is strictly monitored and logged. Unauthorized access is a criminal offense.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashboard-view" style="display:none;padding-top:80px;">
+    <div class="portal-page-header">
+      <div class="container">
+        <div>
+          <div class="breadcrumb">
+            <a href="index.html">Home</a>
+            <span>›</span>
+            <span>Police Portal</span>
+          </div>
+          <h1 class="portal-page-title">Law Enforcement Dashboard</h1>
+          <p class="portal-page-sub" style="color:#818cf8;" id="officer-name-display">Loading Officer Info…</p>
+        </div>
+        <div style="display:flex;gap:12px;align-items:center;">
+          <span class="status-badge badge-purple"><span class="pulse-dot" style="background:#818cf8;box-shadow:0 0 8px #818cf8;"></span> Online</span>
+          <div class="live-clock" style="font-family:var(--mono);font-size:0.85rem;color:var(--text-muted);"></div>
+          <button class="btn btn-ghost" style="font-size:0.82rem;" data-logout>Logout</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="portal-body">
+      <div class="dash-grid container">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+          <div class="sidebar-section">
+            <div class="sidebar-label">Operations</div>
+            <a class="sidebar-link active" data-panel="panel-overview" id="sl-overview">
+              <span class="icon"></span> Overview
+            </a>
+            <a class="sidebar-link" data-panel="panel-cases" id="sl-cases">
+              <span class="icon"></span> View Cases
+            </a>
+            <a class="sidebar-link" data-panel="panel-evidence-review" id="sl-evidence">
+              <span class="icon"></span> Review Evidence
+            </a>
+            <a class="sidebar-link" data-panel="panel-update" id="sl-update">
+              <span class="icon"></span> Update Case Status
+            </a>
+            <a class="sidebar-link" data-panel="panel-request" id="sl-request">
+              <span class="icon"></span> Request Information
+            </a>
+          </div>
+          <div class="sidebar-divider"></div>
+          <div style="padding:12px;">
+            <div style="font-family:var(--mono);font-size:0.68rem;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;">My Caseload</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div style="display:flex;justify-content:space-between;font-size:0.8rem;">
+                <span style="color:var(--text-muted)">Assigned</span>
+                <span style="font-family:var(--mono);color:#818cf8;font-weight:700;" id="sidebar-assigned">—</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:0.8rem;">
+                <span style="color:var(--text-muted)">Pending</span>
+                <span style="font-family:var(--mono);color:#f59e0b;font-weight:700;" id="sidebar-pending">—</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:0.8rem;">
+                <span style="color:var(--text-muted)">Resolved</span>
+                <span style="font-family:var(--mono);color:#10b981;font-weight:700;" id="sidebar-resolved">—</span>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- MAIN -->
+        <main class="main-content">
+
+          <!-- OVERVIEW -->
+          <div class="portal-panel" id="panel-overview" style="display:flex;flex-direction:column;gap:20px;">
+            <div class="stat-cards">
+              <div class="stat-card">
+                <div class="stat-card-label">TOTAL CASES</div>
+                <div class="stat-card-value" style="color:#818cf8;" id="stat-total-cases">—</div>
+                <div class="stat-card-sub">In system</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-card-label">ACTIVE</div>
+                <div class="stat-card-value" id="stat-active">—</div>
+                <div class="stat-card-sub">Ongoing investigations</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-card-label">RESOLVED</div>
+                <div class="stat-card-value" style="color:#10b981;" id="stat-resolved">—</div>
+                <div class="stat-card-sub">Cases closed</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-card-label">PENDING</div>
+                <div class="stat-card-value" style="color:#f59e0b;" id="stat-pending">—</div>
+                <div class="stat-card-sub">Need attention</div>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="panel-header">
+                <span class="panel-title">Recent Alerts</span>
+              </div>
+              <div class="panel-body">
+                <div id="alerts-container"><p style="color:var(--text-muted);text-align:center;padding:24px;">Loading…</p></div>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="panel-header">
+                <span class="panel-title">My Assigned Cases</span>
+                <button class="btn btn-ghost" style="font-size:0.8rem;padding:7px 14px;" onclick="switchPanel('panel-cases')">View All</button>
+              </div>
+              <div class="panel-body">
+                <div class="table-wrap">
+                  <table>
+                    <thead>
+                      <tr><th>Case ID</th><th>Type</th><th>Victim</th><th>Priority</th><th>Status</th><th>Action</th></tr>
+                    </thead>
+                <tbody id="overview-cases-tbody">
+                      <tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:28px;">Loading cases…</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- VIEW CASES -->
+          <div class="portal-panel" id="panel-cases" style="display:none;flex-direction:column;gap:20px;">
+            <div class="panel">
+              <div class="panel-header">
+                <span class="panel-title">All Cases – Filter Cases</span>
+              </div>
+              <div class="panel-body">
+                <div class="filter-bar" style="margin-bottom:20px;">
+                  <input type="text" id="filter-search" placeholder="Search by ID, victim name, type…" />
+                  <select id="filter-status">
+                    <option value="">All Statuses</option>
+                    <option>Pending</option>
+                    <option>Investigating</option>
+                    <option>Under Review</option>
+                    <option>Resolved</option>
+                  </select>
+                  <select id="filter-type">
+                    <option value="">All Crime Types</option>
+                    <option>Online Fraud</option>
+                    <option>Identity Theft</option>
+                    <option>Phishing Attack</option>
+                    <option>Ransomware / Malware</option>
+                    <option>Cyberstalking</option>
+                  </select>
+                  <select id="filter-priority">
+                    <option value="">All Priorities</option>
+                    <option>High</option>
+                    <option>Medium</option>
+                    <option>Low</option>
+                  </select>
+                  <button class="btn btn-primary" id="filter-apply-btn" style="padding:9px 18px;">Apply Filters</button>
+                </div>
+                <div class="table-wrap">
+                  <table>
+                    <thead>
+                      <tr><th>Case ID</th><th>Type</th><th>Victim</th><th>Submitted</th><th>Priority</th><th>Status</th><th>Officer</th><th>Action</th></tr>
+                    </thead>
+                    <tbody id="all-cases-tbody">
+                      <tr><td colspan="8" style="text-align:center;color:var(--text-muted);padding:28px;">Loading cases…</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- REVIEW EVIDENCE -->
+          <div class="portal-panel" id="panel-evidence-review" style="display:none;flex-direction:column;gap:20px;">
+            <div class="panel">
+              <div class="panel-header">
+                <span class="panel-title">Review Digital Evidence</span>
+                <select id="evidence-review-case-select" style="background:var(--bg-dark);border:1px solid var(--border);color:var(--text-primary);padding:7px 12px;border-radius:7px;font-family:var(--font);font-size:0.85rem;outline:none;">
+                  <option value="">Select a case to review…</option>
+                </select>
+              </div>
+              <div class="panel-body">
+                <div id="evidence-case-summary" style="margin-bottom:20px;padding:16px;background:var(--bg-dark);border:1px solid var(--border);border-radius:10px;">
+                  <p style="color:var(--text-muted);text-align:center;">Select a case to view summary</p>
+                </div>
+                <h4 style="font-size:0.9rem;color:var(--text-secondary);margin-bottom:16px;">Evidence Files (4 items)</h4>
+                <div class="evidence-grid" style="margin-bottom:24px;" id="evidence-review-grid">
+                  <p style="color:var(--text-muted);text-align:center;padding:24px;width:100%;">Select a case to view evidence.</p>
+                </div>
+                <div class="form-group">
+                  <label>Officer Investigation Notes</label>
+                  <textarea id="officer-notes-area" rows="4" placeholder="Add forensic analysis notes, observations, and findings…"></textarea>
+                </div>
+                <div style="display:flex;gap:12px;">
+                  <button class="btn btn-primary" id="save-notes-btn">Save Notes</button>
+                  <button class="btn btn-ghost" onclick="switchPanel('panel-update')">Update Case Status</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- UPDATE STATUS -->
+          <div class="portal-panel" id="panel-update" style="display:none;flex-direction:column;gap:20px;">
+            <div class="panel">
+              <div class="panel-header">
+                <span class="panel-title">Update Case Status</span>
+              </div>
+              <div class="panel-body">
+                <form id="update-status-form">
+                  <div class="form-group">
+                    <label>Select Case</label>
+                    <select id="update-case-select"></select>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>Current Status</label>
+                      <input type="text" id="current-status-display" readonly style="opacity:0.6;cursor:not-allowed;" />
+                    </div>
+                    <div class="form-group">
+                      <label>New Status *</label>
+                      <select id="new-status">
+                        <option value="" disabled selected>Select new status…</option>
+                        <option>Pending</option>
+                        <option>Under Review</option>
+                        <option>Investigating</option>
+                        <option>Additional Info Requested</option>
+                        <option>Evidence Collected</option>
+                        <option>Suspect Identified</option>
+                        <option>Arrested</option>
+                        <option>Referred to Court</option>
+                        <option>Resolved</option>
+                        <option>Closed</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label>Status Update Message (Notify Victim)</label>
+                    <textarea rows="4" placeholder="Write a message that will be sent to the victim explaining the current status and next steps…"></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label>Notify Victim via</label>
+                    <div style="display:flex;gap:24px;margin-top:8px;">
+                      <label style="display:flex;align-items:center;gap:8px;font-size:0.88rem;color:var(--text-secondary);cursor:pointer;">
+                        <input type="checkbox" id="notify-email" checked style="width:18px;height:18px;accent-color:var(--cyan);cursor:pointer;" /> Email Notification
+                      </label>
+                      <label style="display:flex;align-items:center;gap:8px;font-size:0.88rem;color:var(--text-secondary);cursor:pointer;">
+                        <input type="checkbox" id="notify-portal" checked style="width:18px;height:18px;accent-color:var(--cyan);cursor:pointer;" /> Portal Alert
+                      </label>
+                    </div>
+                  </div>
+                  <div style="display:flex;gap:12px;">
+                    <button type="submit" class="btn btn-primary form-submit" id="update-status-btn">Update Status & Notify →</button>
+                    <button type="reset" class="btn btn-ghost" style="padding:14px 24px;">Reset</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- REQUEST INFO -->
+          <div class="portal-panel" id="panel-request" style="display:none;flex-direction:column;gap:20px;">
+            <div class="panel">
+              <div class="panel-header">
+                <span class="panel-title">Request Additional Information</span>
+              </div>
+              <div class="panel-body">
+                <form id="request-info-form">
+                  <div class="form-group">
+                    <label>Select Case</label>
+                    <select id="request-case-select">
+                      <option value="">Select a case…</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Type of Information Needed</label>
+                    <select>
+                      <option value="" disabled selected>Select information type…</option>
+                      <option>Additional Screenshots / Images</option>
+                      <option>Bank / Transaction Records</option>
+                      <option>Communication Logs (Email/Chat)</option>
+                      <option>Device Information</option>
+                      <option>Witness Details</option>
+                      <option>Identity Documents</option>
+                      <option>Other</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Detailed Request Message *</label>
+                    <textarea rows="5" placeholder="Describe exactly what information is needed and why it's important for the investigation…"></textarea>
+                  </div>
+                  <button type="submit" class="btn btn-primary form-submit" style="background:#818cf8;box-shadow:0 0 20px rgba(129,140,248,0.3);" id="send-request-btn">Send Information Request →</button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASE ACTION MODAL -->
+  <div class="modal-overlay" id="case-action-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <span class="modal-title">Case #CYB-4821 – Quick Actions</span>
+        <button class="modal-close" onclick="closeModal('case-action-modal')">X</button>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <button class="btn btn-ghost" style="justify-content:center;" onclick="goToReviewEvidence()">Review Evidence</button>
+          <button class="btn btn-ghost" style="justify-content:center;" onclick="closeModal('case-action-modal');switchPanel('panel-update')">Update Status</button>
+          <button class="btn btn-ghost" style="justify-content:center;" onclick="closeModal('case-action-modal');switchPanel('panel-request')">Request Info</button>
+          <button class="btn btn-primary" style="justify-content:center;" id="assign-to-me-btn"
+            onclick="closeModal('case-action-modal')">Assign to Me</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EVIDENCE DETAIL MODAL -->
+  <div class="modal-overlay" id="evidence-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <span class="modal-title" id="evidence-modal-title">Evidence Detail</span>
+        <button class="modal-close" onclick="closeModal('evidence-modal')">X</button>
+      </div>
+      <div style="background:var(--bg-dark);border:1px solid var(--border);border-radius:10px;padding:24px;text-align:center;margin-bottom:20px;">
+        <div style="font-size:4rem;margin-bottom:8px;"></div>
+        <p style="color:var(--text-muted);font-size:0.82rem;" id="evidence-modal-info">File details will appear here.</p>
+      </div>
+      <div style="display:flex;gap:12px;">
+        <span class="status-badge badge-green">Chain of Custody Intact</span>
+        <span class="status-badge badge-cyan">Hash Verified</span>
+      </div>
+      <div style="margin-top:16px;display:flex;gap:10px;">
+        <button class="btn btn-primary" onclick="closeModal('evidence-modal')">Mark Reviewed</button>
+        <button class="btn btn-ghost" onclick="closeModal('evidence-modal')">Flag for Analysis</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- REQUEST SUCCESS MODAL -->
+  <div class="modal-overlay" id="request-success-modal">
+    <div class="modal" style="text-align:center;max-width:400px;">
+      <div style="width:60px;height:60px;background:rgba(129,140,248,0.1);border:2px solid #818cf8;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:1.5rem;color:#818cf8;">✓</div>
+      <h2 style="margin-bottom:10px;">Request Sent</h2>
+      <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:24px;">The information request has been successfully dispatched to the victim. They will receive a notification immediately.</p>
+      <button class="btn btn-primary" style="width:100%;background:#818cf8;" onclick="closeModal('request-success-modal')">Continue</button>
+    </div>
+  </div>
+
+  <!-- SUCCESS MODAL -->
+  <div class="modal-overlay" id="status-success-modal">
+    <div class="modal" style="text-align:center;max-width:400px;">
+      <div style="width:60px;height:60px;background:rgba(16,185,129,0.1);border:2px solid #10b981;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:1.5rem;color:#10b981;">✓</div>
+      <h2 style="margin-bottom:10px;">Status Updated</h2>
+      <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:24px;" id="status-success-msg">The case status has been successfully updated and the victim has been notified.</p>
+      <button class="btn btn-primary" style="width:100%;" onclick="closeModal('status-success-modal')">Got it</button>
+    </div>
+  </div>
+
+  <script type="module" src="main.js"></script>
+  <script type="module" src="police-app.js"></script>
+  <script>
+    function switchPanel(id) {
+      document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+      document.querySelectorAll('.portal-panel').forEach(p => p.style.display = 'none');
+      document.getElementById(id).style.display = 'flex';
+      const link = document.querySelector(`[data-panel="${id}"]`);
+      if (link) link.classList.add('active');
+    }
+    document.querySelectorAll('.sidebar-link[data-panel]').forEach(link => {
+      link.addEventListener('click', () => switchPanel(link.dataset.panel));
+    });
+  </script>
+</body>
+</html>

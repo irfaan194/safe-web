@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Portal – CyberShield</title>
+  <meta name="description"
+    content="System administration portal for managing roles, permissions, case assignments, and monitoring activity on CyberShield." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">
+        <span class="logo-icon">⬡</span>
+        <span>CyberShield</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="victim-portal.html">Citizen Portal</a></li>
+        <li><a href="police-portal.html">Police Portal</a></li>
+      </ul>
+      <div class="nav-actions">
+        <span class="status-badge badge-yellow" style="font-size:0.75rem;">System Admin</span>
+      </div>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="index.html">Home</a>
+      <a href="victim-portal.html">Citizen Portal</a>
+      <a href="police-portal.html">Police Portal</a>
+    </div>
+  </nav>
+
+  <canvas id="gridCanvas"></canvas>
+
+  <!-- AUTH -->
+  <div id="auth-view">
+    <div class="auth-wrap">
+      <div class="auth-card" style="border-color:rgba(245,158,11,0.25);box-shadow:0 0 40px rgba(245,158,11,0.1);">
+        <div class="auth-logo" style="color:#f59e0b;">
+          <span>⬡</span> CyberShield · Admin Portal
+        </div>
+        <h2>Administrator Access</h2>
+        <p class="sub">Classified — System Administrators Only. All sessions are logged.</p>
+        <form style="margin-top:24px;" id="admin-login-form">
+          <div class="form-group">
+            <label>Username / Email</label>
+            <input type="text" placeholder="Admin username" required />
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" placeholder="••••••••••••" required />
+          </div>
+          <button type="button" class="btn btn-primary form-submit"
+            style="background:#f59e0b;box-shadow:0 0 20px rgba(245,158,11,0.3);color:#030a0e;" id="admin-login-btn">
+            Login to Admin Portal →
+          </button>
+        </form>
+        <div
+          style="margin-top:20px;padding:14px;background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:8px;font-size:0.8rem;color:var(--text-muted);">
+          This portal requires multi-factor authentication. Unauthorized access will be reported to cyber authorities.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashboard-view" style="display:none;padding-top:80px;">
+    <div class="portal-page-header">
+      <div class="container">
+        <div>
+          <div class="breadcrumb">
+            <a href="index.html">Home</a>
+            <span>›</span>
+            <span>Admin Portal</span>
+          </div>
+          <h1 class="portal-page-title">System Administration</h1>
+          <p class="portal-page-sub" style="color:#f59e0b;" id="admin-name-display">Super Admin · Loading…</p>
+        </div>
+        <div style="display:flex;gap:12px;align-items:center;">
+          <span class="status-badge badge-yellow"><span class="pulse-dot"
+              style="background:#f59e0b;box-shadow:0 0 8px #f59e0b;"></span> Admin Active</span>
+          <div class="live-clock" style="font-family:var(--mono);font-size:0.85rem;color:var(--text-muted);"></div>
+          <button class="btn btn-ghost" style="font-size:0.82rem;" data-logout>Logout</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="portal-body">
+      <div class="dash-grid container">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+          <div class="sidebar-section">
+            <div class="sidebar-label">Administration</div>
+            <a class="sidebar-link active" data-panel="panel-overview">
+              <span class="icon"></span> Dashboard
+            </a>
+            <a class="sidebar-link" data-panel="panel-assign">
+              <span class="icon"></span> Assign Cases
+            </a>
+
+            <a class="sidebar-link" data-panel="panel-monitor">
+              <span class="icon"></span> System Monitor
+            </a>
+            <a class="sidebar-link" data-panel="panel-users">
+              <span class="icon"></span> Manage Users
+            </a>
+          </div>
+          <div class="sidebar-divider"></div>
+          <div class="sidebar-section">
+            <div class="sidebar-label">System</div>
+            <a class="sidebar-link" data-panel="panel-audit">
+              <span class="icon"></span> Audit Logs
+            </a>
+          </div>
+        </aside>
+
+        <!-- MAIN -->
+        <main class="main-content">
+
+          <!-- OVERVIEW -->
+          <div class="portal-panel" id="panel-overview" style="display:flex;flex-direction:column;gap:20px;">
+            <div class="stat-cards" style="grid-template-columns:repeat(4,1fr);">
+              <div class="stat-card">
+                <div class="stat-card-label">TOTAL CASES</div>
+                <div class="stat-card-value" style="color:#f59e0b;" id="stat-total-cases">—</div>
+                <div class="stat-card-sub">All time</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-card-label">ACTIVE OFFICERS</div>
+                <div class="stat-card-value" style="color:#818cf8;" id="stat-active-officers">—</div>
+                <div class="stat-card-sub">Currently registered</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-card-label">CITIZENS REG.</div>
+                <div class="stat-card-value" id="stat-citizens">—</div>
+                <div class="stat-card-sub">Registered users</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-card-label">RESOLUTION</div>
+                <div class="stat-card-value" style="color:#10b981;" id="stat-resolution">—</div>
+                <div class="stat-card-sub">This month</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ASSIGN CASES -->
+          <div class="portal-panel" id="panel-assign" style="display:none;flex-direction:column;gap:20px;">
+            <div class="panel">
+              <div class="panel-header">
+                <span class="panel-title">Assign Cases to Officers</span>
+                <span class="status-badge badge-yellow" id="unassigned-badge">0 Unassigned</span>
+              </div>
+              <div class="panel-body">
+                <div
+                  style="margin-bottom:20px;padding:16px;background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:10px;">
+                  <div id="unassigned-count-alert"
+                    style="font-size:0.85rem;color:#f59e0b;font-weight:600;margin-bottom:4px;">0 cases awaiting officer
+                    assignment</div>
+                  <div style="font-size:0.82rem;color:var(--text-muted);">Unassigned cases may delay investigations.
+                    Please assign officers promptly.</div>
+                </div>
+                <div class="table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Case ID</th>
+                        <th>Crime Type</th>
+                        <th>Priority</th>
+                        <th>Filed</th>
+                        <th>Assign Officer</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="assign-cases-tbody">
+                      <tr>
+                        <td colspan="6" style="text-align:center;color:var(--text-muted);padding:28px;">Loading cases…
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+      <!-- MONITOR SYSTEM ACTIVITY -->
+      <div class="portal-panel" id="panel-monitor" style="display:none;flex-direction:column;gap:20px;">
+
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Live Activity Feed</span>
+            <span class="status-badge badge-green"><span class="pulse-dot"
+                style="width:6px;height:6px;background:#10b981;box-shadow:0 0 8px #10b981;"></span> Live</span>
+          </div>
+          <div class="panel-body">
+            <div id="activity-feed-container">
+              <p style="color:var(--text-muted);text-align:center;padding:24px;">Loading activity…</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- MANAGE USERS -->
+      <div class="portal-panel" id="panel-users" style="display:none;flex-direction:column;gap:20px;">
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Manage Users</span>
+            <div class="filter-bar">
+              <input type="text" id="users-search" placeholder="Search users…" style="min-width:180px;flex:unset;" />
+              <select id="users-role-filter"
+                style="background:var(--bg-dark);border:1px solid var(--border);color:var(--text-primary);padding:9px 12px;border-radius:8px;font-family:var(--font);font-size:0.88rem;outline:none;">
+                <option value="">All Roles</option>
+                <option value="admin">Admin</option>
+                <option value="officer">Officer</option>
+                <option value="citizen">Citizen</option>
+              </select>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Joined</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="users-tbody">
+                  <tr>
+                    <td colspan="6" style="text-align:center;color:var(--text-muted);padding:28px;">Loading…</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SETTINGS PANEL -->
+
+
+      <!-- AUDIT LOG -->
+      <div class="portal-panel" id="panel-audit" style="display:none;flex-direction:column;gap:20px;">
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Audit Log</span>
+
+          </div>
+          <div class="panel-body">
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Timestamp</th>
+                    <th>User</th>
+                    <th>Role</th>
+                    <th>Action</th>
+                    <th>Target</th>
+                    <th>IP Address</th>
+                  </tr>
+                </thead>
+                <tbody id="audit-tbody">
+                  <tr>
+                    <td colspan="6" style="text-align:center;color:var(--text-muted);padding:28px;">Loading audit
+                      logs…</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ASSIGN MODAL -->
+  <div class="modal-overlay" id="assign-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <span class="modal-title">Set Case – Confirm Assignment</span>
+        <button class="modal-close" onclick="closeModal('assign-modal')">X</button>
+      </div>
+      <div
+        style="background:var(--bg-dark);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:20px;">
+        <div style="font-size:0.85rem;color:var(--text-secondary);">
+          <div style="margin-bottom:6px;"><strong style="color:var(--text-primary);">Case:</strong> #CYB-4822 –
+            Ransomware Attack</div>
+          <div style="margin-bottom:6px;"><strong style="color:var(--text-primary);">Priority:</strong> <span
+              style="color:#ef4444;font-weight:700;">Critical</span></div>
+          <div><strong style="color:var(--text-primary);">Assign to:</strong> Insp. Ramesh Kumar</div>
+        </div>
+      </div>
+      <p style="font-size:0.88rem;color:var(--text-muted);margin-bottom:20px;">The officer will be notified immediately
+        and the case will appear in their dashboard.</p>
+      <div style="display:flex;gap:12px;">
+        <button class="btn btn-primary"
+          onclick="closeModal('assign-modal');alert('Case assigned successfully!')">Confirm Assignment</button>
+        <button class="btn btn-ghost" onclick="closeModal('assign-modal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD OFFICER MODAL -->
+  <div class="modal-overlay" id="add-role-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <span class="modal-title">Create Officer Account</span>
+        <button class="modal-close" onclick="closeModal('add-role-modal')">&#x2715;</button>
+      </div>
+      <form id="add-officer-form">
+        <div class="form-row" style="display:flex;gap:12px;">
+          <div class="form-group" style="flex:1;"><label>First Name</label><input type="text" id="new-officer-fname"
+              placeholder="First name" required /></div>
+          <div class="form-group" style="flex:1;"><label>Last Name</label><input type="text" id="new-officer-lname"
+              placeholder="Last name" required /></div>
+        </div>
+        <div class="form-group"><label>Email (Login ID)</label><input type="email" id="new-officer-email"
+            placeholder="officer@police.gov" required /></div>
+        <div class="form-group"><label>Password</label><input type="password" id="new-officer-pass"
+            placeholder="Min 6 characters" required /></div>
+        <div class="form-group"><label>Department</label><input type="text" id="new-officer-dept"
+            placeholder="e.g. Cybercrime Division" required /></div>
+        <div class="form-group"><label>Badge ID</label><input type="text" id="new-officer-badge"
+            placeholder="e.g. CYB-OFF-1234" /></div>
+        <div style="display:flex;gap:12px;margin-top:8px;">
+          <button type="submit" class="btn btn-primary" style="background:#f59e0b;color:#030a0e;">Create
+            Officer</button>
+          <button type="button" class="btn btn-ghost" onclick="closeModal('add-role-modal')">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script type="module" src="main.js"></script>
+  <script type="module" src="admin-app.js"></script>
+  <script>
+    function switchPanel(id) {
+      document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+      document.querySelectorAll('.portal-panel').forEach(p => p.style.display = 'none');
+      document.getElementById(id).style.display = 'flex';
+      const link = document.querySelector(`[data-panel="${id}"]`);
+      if (link) link.classList.add('active');
+    }
+    document.querySelectorAll('.sidebar-link[data-panel]').forEach(link => {
+      link.addEventListener('click', () => switchPanel(link.dataset.panel));
+    });
+  </script>
+</body>
+
+</html>

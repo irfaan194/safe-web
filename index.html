@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CyberShield – Cybercrime Reporting System</title>
+  <meta name="description" content="Report cybercrime incidents securely. CyberShield connects victims, police, and administrators for efficient cybercrime case management." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">
+        <span class="logo-icon">⬡</span>
+        <span>CyberShield</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#how-it-works">How It Works</a></li>
+        <li><a href="#portals">Portals</a></li>
+        <li><a href="#features">Features</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a href="victim-portal.html" class="btn btn-ghost" id="nav-login">Login</a>
+        <a href="victim-portal.html" class="btn btn-primary" id="nav-report">Report Incident</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="#how-it-works">How It Works</a>
+      <a href="#portals">Portals</a>
+      <a href="#features">Features</a>
+      <a href="victim-portal.html" class="btn btn-primary">Report Incident</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <canvas id="gridCanvas"></canvas>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Secure · Encrypted · 24/7 Active
+      </div>
+      <h1 class="hero-title">
+        Cybercrime<br />
+        <span class="accent-text">Reporting</span> System.
+      </h1>
+      <p class="hero-desc">
+        Report cybercrime incidents securely and efficiently. Our platform connects victims with law enforcement,
+        ensuring every case is tracked, reviewed, and resolved with full transparency.
+      </p>
+      <div class="hero-actions">
+        <a href="victim-portal.html" class="btn btn-primary btn-lg" id="hero-report-btn">Submit a Report →</a>
+        <a href="#how-it-works" class="btn btn-ghost btn-lg" id="hero-learn-btn">How It Works</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-num">12,400+</span>
+          <span class="stat-label">Cases Reported</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-num">98.2%</span>
+          <span class="stat-label">Resolution Rate</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-num">340+</span>
+          <span class="stat-label">Officers Active</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="cyber-card floating">
+        <div class="cyber-card-header">
+          <span class="pulse-dot"></span> Live Case Feed
+        </div>
+        <div class="case-item">
+          <span class="case-id">#CYB-4821</span>
+          <span class="case-status status-active">Under Review</span>
+        </div>
+        <div class="case-item">
+          <span class="case-id">#CYB-4820</span>
+          <span class="case-status status-resolved">Resolved</span>
+        </div>
+        <div class="case-item">
+          <span class="case-id">#CYB-4819</span>
+          <span class="case-status status-pending">Pending</span>
+        </div>
+        <div class="case-item">
+          <span class="case-id">#CYB-4818</span>
+          <span class="case-status status-active">Under Review</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRUSTED BY -->
+  <section class="trusted">
+    <p class="trusted-label">Trusted by Law Enforcement Agencies</p>
+    <div class="trusted-logos">
+      <span class="trust-logo">⬡ National CBI</span>
+      <span class="trust-logo">⬡ Cyber Cell HQ</span>
+      <span class="trust-logo">⬡ State Police</span>
+      <span class="trust-logo">⬡ Interpol Connect</span>
+      <span class="trust-logo">⬡ Digital Courts</span>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section" id="how-it-works">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Process</span>
+        <h2 class="section-title">How Does It Work?</h2>
+        <p class="section-desc">A streamlined 4-step process to report, investigate, and resolve cybercrime cases.</p>
+      </div>
+      <div class="steps-grid">
+        <div class="step-card" id="step-1">
+          <div class="step-number">01</div>
+          <div class="step-icon"></div>
+          <h3>Create Account</h3>
+          <p>Register on the Citizen Portal to get your secure, encrypted account for reporting incidents.</p>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-card" id="step-2">
+          <div class="step-number">02</div>
+          <div class="step-icon"></div>
+          <h3>Submit Incident</h3>
+          <p>Fill the incident form with crime type, detailed description, and upload digital evidence.</p>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-card" id="step-3">
+          <div class="step-number">03</div>
+          <div class="step-icon"></div>
+          <h3>Police Investigation</h3>
+          <p>Officers review evidence, update case status, and request additional information if needed.</p>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-card" id="step-4">
+          <div class="step-number">04</div>
+          <div class="step-icon"></div>
+          <h3>Track & Resolve</h3>
+          <p>Track your case status in real-time. Get notified at every step until resolution.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PORTALS -->
+  <section class="section section-dark" id="portals">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Access</span>
+        <h2 class="section-title">Choose Your Portal</h2>
+        <p class="section-desc">Three specialized portals for victims, law enforcement, and system administrators.</p>
+      </div>
+      <div class="portals-grid">
+        <!-- Victim -->
+        <div class="portal-card" id="victim-portal-card">
+          <div class="portal-icon-wrap victim-color">
+            <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0"/></svg>
+          </div>
+          <h3>Citizen Portal</h3>
+          <p class="portal-role">For Victims & Citizens</p>
+          <ul class="portal-features">
+            <li><span class="check">→</span> Login / Register securely</li>
+            <li><span class="check">→</span> Submit Incident Report</li>
+            <li><span class="check">→</span> Upload Digital Evidence</li>
+            <li><span class="check">→</span> Track Case Status</li>
+          </ul>
+          <a href="victim-portal.html" class="btn btn-portal" id="victim-portal-btn">Access Portal →</a>
+        </div>
+        <!-- Police -->
+        <div class="portal-card portal-featured" id="police-portal-card">
+          <div class="portal-badge">Law Enforcement</div>
+          <div class="portal-icon-wrap police-color">
+            <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+          </div>
+          <h3>Police Portal</h3>
+          <p class="portal-role">For Law Enforcement Officers</p>
+          <ul class="portal-features">
+            <li><span class="check">→</span> Login Police Portal</li>
+            <li><span class="check">→</span> View & Filter Cases</li>
+            <li><span class="check">→</span> Review Digital Evidence</li>
+            <li><span class="check">→</span> Update Case Status</li>
+            <li><span class="check">→</span> Notify Victims</li>
+            <li><span class="check">→</span> Request Additional Info</li>
+          </ul>
+          <a href="police-portal.html" class="btn btn-primary" id="police-portal-btn">Access Portal →</a>
+        </div>
+        <!-- Admin -->
+        <div class="portal-card" id="admin-portal-card">
+          <div class="portal-icon-wrap admin-color">
+            <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"/></svg>
+          </div>
+          <h3>Admin Portal</h3>
+          <p class="portal-role">For System Administrators</p>
+          <ul class="portal-features">
+            <li><span class="check">→</span> Login Admin Portal</li>
+            <li><span class="check">→</span> Set & Assign Cases</li>
+            <li><span class="check">→</span> Assign Roles & Permissions</li>
+            <li><span class="check">→</span> Monitor System Activity</li>
+          </ul>
+          <a href="admin-portal.html" class="btn btn-portal" id="admin-portal-btn">Access Portal →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="section" id="features">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Capabilities</span>
+        <h2 class="section-title">Built for Security & Speed</h2>
+        <p class="section-desc">Every feature engineered for reliability and secure cybercrime management.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card" id="feat-1">
+          <div class="feat-icon"></div>
+          <h4>End-to-End Encrypted</h4>
+          <p>All submissions and evidence are encrypted in transit and at rest. Military-grade security standards.</p>
+        </div>
+        <div class="feature-card" id="feat-2">
+          <div class="feat-icon"></div>
+          <h4>Real-time Tracking</h4>
+          <p>Track your case 24/7 with live status updates pushed directly to your dashboard.</p>
+        </div>
+        <div class="feature-card" id="feat-3">
+          <div class="feat-icon"></div>
+          <h4>Digital Evidence Vault</h4>
+          <p>Securely upload images, documents, and digital artifacts as evidence for your case.</p>
+        </div>
+        <div class="feature-card" id="feat-4">
+          <div class="feat-icon"></div>
+          <h4>Instant Notifications</h4>
+          <p>Victims get notified at every stage of the investigation — from review to resolution.</p>
+        </div>
+        <div class="feature-card" id="feat-5">
+          <div class="feat-icon"></div>
+          <h4>Role-Based Access</h4>
+          <p>Admin assigns specific roles and permissions to officers ensuring data privacy and accountability.</p>
+        </div>
+        <div class="feature-card" id="feat-6">
+          <div class="feat-icon"></div>
+          <h4>Activity Monitoring</h4>
+          <p>Full system audit trail. Every action is logged for compliance and investigation purposes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-box">
+        <div class="cta-content">
+          <h2>Ready to Report an Incident?</h2>
+          <p>Don't let cybercrime go unreported. Our platform ensures your report reaches the right authorities immediately.</p>
+          <div class="cta-actions">
+            <a href="victim-portal.html" class="btn btn-cta" id="cta-report-btn">Submit Report Now →</a>
+            <a href="police-portal.html" class="btn btn-ghost" id="cta-police-btn">Police Login</a>
+          </div>
+        </div>
+        <div class="cta-visual">
+          <div class="cta-badge">
+            <div class="cta-icon"></div>
+            <span>Secure Reporting</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="nav-logo">
+            <span class="logo-icon">⬡</span>
+            <span>CyberShield</span>
+          </a>
+          <p>A secure, transparent platform for reporting and managing cybercrime cases across all jurisdictions.</p>
+        </div>
+        <div class="footer-links">
+          <h5>Portals</h5>
+          <a href="victim-portal.html">Citizen Portal</a>
+          <a href="police-portal.html">Police Portal</a>
+          <a href="admin-portal.html">Admin Portal</a>
+        </div>
+        <div class="footer-links">
+          <h5>System</h5>
+          <a href="#features">Features</a>
+          <a href="#how-it-works">How It Works</a>
+          <a href="#portals">Access Portals</a>
+        </div>
+        <div class="footer-links">
+          <h5>Legal</h5>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Use</a>
+          <a href="#">Data Security</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 CyberShield – Cybercrime Reporting System. All rights reserved.</p>
+        <p class="footer-status"><span class="pulse-dot"></span> All Systems Operational</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
